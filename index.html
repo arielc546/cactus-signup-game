@@ -117,8 +117,10 @@ h1,h2,h3{margin:0;line-height:1.05;text-wrap:balance;font-family:var(--display);
 
 /* form */
 .form{display:grid;gap:12px;padding:4px 4px 14px}
-.screen.scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.screen.scroll .game{flex:none}
+html.docscroll,html.docscroll body{overflow:auto;height:auto;min-height:100%}
+html.docscroll #app{height:auto;min-height:100vh}
+html.docscroll .screen{flex:none}
+html.docscroll .game{flex:none}
 .field{display:grid;gap:6px}
 .field label{font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .field input{width:100%;min-height:62px;padding:12px 16px;border:var(--bw) solid var(--ink);border-radius:14px;background:var(--cream);font-size:22px;font-weight:600;box-shadow:var(--sh-s);-webkit-user-select:text;user-select:text}
@@ -286,7 +288,7 @@ h1,h2,h3{margin:0;line-height:1.05;text-wrap:balance;font-family:var(--display);
 <button class="adminHit" id="adminHit" aria-label="admin"></button>
 
 <script>
-const VERSION = "1.6";   // +0.1 per iteration
+const VERSION = "1.7";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -409,7 +411,7 @@ const T = {
     what: "מה קרה", signal: "הסימן", crowd: "{p}% מהשחקנים השקיעו",
     mazeExit: "אקזיט!", mazeNoExit: "לא הגעתם לאקזיט בזמן", billsGot: "{n} סבבי גיוס", rounds: "סבבים", secLeft: "{s} שניות נשארו",
     yourScore: "הניקוד שלך", rank: "מקום {r} מתוך {n}", beat: "ניצחת {n} אנליסטים", beatOne: "ניצחת אנליסט אחד", beatNone: "האנליסטים עדיין מובילים",
-    iAnalyst: "אני רוצה להיות אנליסט", iAnalystS: "לומדים VC מבפנים. גיוס פתוח.", iIdea: "יש לי רעיון", iIdeaS: "15 דקות איתנו. בלי מצגת.", iUpdates: "אני מעוניין לדעת כשקורים דברים", iUpdatesS: "אירועים, גיוסים, פתיחות.", iNone: "לא לפנות אליי, לא לדבר אליי", iNoneS: "בסדר. רק הניקוד נשאר.",
+    iAnalyst: "אני רוצה להיות אנליסט", iAnalystS: "לומדים VC מבפנים. גיוס פתוח.", iIdea: "יש לי רעיון", iIdeaS: "ספרו לנו עליו.", iUpdates: "אני מעוניין לדעת כשקורים דברים", iUpdatesS: "אירועים, תוכניות ודברים חשובים שקורים.", iNone: "לא לפנות אליי, לא לדבר אליי", iNoneS: "בסדר. רק הניקוד נשאר.",
     again: "עוד משחק", done: "סיימתי",
     board: "לוח התוצאות", played: "{n} שיחקו", faculties: "קרב הפקולטות", analystTag: "אנליסט", noScores: "עדיין אין תוצאות. מי ראשון?", noFac: "עוד לא שיחקו מספיק",
     next: "הבא", pending: "{n} ממתינים לסנכרון", lang: "English"
@@ -426,7 +428,7 @@ const T = {
     what: "What happened", signal: "The signal", crowd: "{p}% of players invested",
     mazeExit: "Exit!", mazeNoExit: "No exit in time", billsGot: "{n} funding rounds", rounds: "rounds", secLeft: "{s} seconds left",
     yourScore: "Your score", rank: "#{r} of {n}", beat: "You beat {n} analysts", beatOne: "You beat one analyst", beatNone: "The analysts are still ahead",
-    iAnalyst: "I want to be an analyst", iAnalystS: "Learn VC from the inside. Applications open.", iIdea: "I have an idea", iIdeaS: "15 minutes with us. No deck needed.", iUpdates: "Keep me posted", iUpdatesS: "Events, hiring, openings.", iNone: "No thanks", iNoneS: "Fine. Only the score stays.",
+    iAnalyst: "I want to be an analyst", iAnalystS: "Learn VC from the inside. Applications open.", iIdea: "I have an idea", iIdeaS: "Tell us about it.", iUpdates: "Keep me posted", iUpdatesS: "Events, programs and things that matter.", iNone: "No thanks", iNoneS: "Fine. Only the score stays.",
     again: "Play again", done: "Done",
     board: "Leaderboard", played: "{n} played", faculties: "Faculty battle", analystTag: "analyst", noScores: "No scores yet. Who's first?", noFac: "Not enough plays yet",
     next: "Next", pending: "{n} waiting to sync", lang: "עברית"
@@ -539,7 +541,7 @@ function updatePending() { const n = DB.get("queue", []).length; const el = $("#
 
 function sendSignup() {
   const p = S.player;
-  const payload = { event: "signup", play_id: p.play_id, full_name: p.name, phone: p.phone, faculty: p.faculty, year: p.year, consent: true, device: DEVICE, lang: L, played_at: new Date().toISOString() };
+  const payload = { event: "signup", play_id: p.play_id, full_name: p.name, phone: p.phone, faculty: p.faculty, year: p.year, device: DEVICE, lang: L, played_at: new Date().toISOString() };
   upsertLead(payload); enqueue(payload);
 }
 function sendResult(abandoned) {
@@ -547,7 +549,7 @@ function sendResult(abandoned) {
   const deals = S.results.filter(r => r.type === "deal");
   const payload = { event: abandoned ? "abandoned" : "result", play_id: p.play_id, full_name: p.name, phone: p.phone, score: S.score, best_score: Math.max(S.best, S.score), attempt: S.attempt,
     rank_at_time: rankOf(S.score), deals_matched: deals.filter(r => r.ok).length, deals_seen: deals.length, maze_exit: !!(S.results.find(r => r.type === "maze") || {}).exit,
-    interest_analyst: !!S.interests.analyst, interest_idea: !!S.interests.idea, interest_updates: !!S.interests.updates, no_contact: !!S.interests.none, finished_at: new Date().toISOString(), device: DEVICE };
+    consent: !!(S.interests.analyst || S.interests.idea || S.interests.updates), interest_analyst: !!S.interests.analyst, interest_idea: !!S.interests.idea, interest_updates: !!S.interests.updates, no_contact: !!S.interests.none, finished_at: new Date().toISOString(), device: DEVICE };
   upsertLead(payload); enqueue(payload);
 }
 
@@ -591,7 +593,9 @@ function setPose(pose) { const c = $("#cactus"); if (c) { c.setAttribute("class"
 /* ---------- screens ---------- */
 function go(screen, arg) {
   clearTimers(); S.screen = screen;
+  document.documentElement.classList.toggle("docscroll", screen === "form"); window.scrollTo(0, 0);
   const fn = Screens[screen]; app.innerHTML = ""; fn(arg);
+  if (screen === "attract" && pendingReload) location.reload();
   document.documentElement.dir = L === "he" ? "rtl" : "ltr"; document.documentElement.lang = L;
   resetIdle(); updatePending();
 }
@@ -651,11 +655,9 @@ Screens.form = function () {
       <div class="field"><label for="f-phone">${esc(t("phone"))}</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="off" placeholder="${esc(t("phonePh"))}" maxlength="12" enterkeyhint="done"></div>
       <div class="field"><label>${esc(t("study"))}</label><div class="chips" id="f-fac">${facs.map(f => `<button class="chip" type="button" data-v="${esc(f)}">${esc(f)}</button>`).join("")}</div></div>
       <div class="field"><label>${esc(t("year"))}</label><div class="chips" id="f-year">${yrs.map(y => `<button class="chip" type="button" data-v="${esc(y)}">${esc(y)}</button>`).join("")}</div></div>
-      <label class="consent"><input type="checkbox" id="f-consent"><span>${esc(t("consent"))}</span></label>
       <div class="err" id="err"></div>
       <button class="btn primary" id="start">${esc(t("start"))}</button>
     </div>`);
-  app.querySelector(".screen").classList.add("scroll");
   let fac = null, year = null;
   const chips = (id, set) => $(id).querySelectorAll(".chip").forEach(c => c.onclick = () => { $(id).querySelectorAll(".chip").forEach(x => x.classList.remove("on")); c.classList.add("on"); set(c.dataset.v); Sound.tap(); });
   chips("#f-fac", v => fac = v); chips("#f-year", v => year = v);
@@ -668,7 +670,6 @@ Screens.form = function () {
     if (!/^05\d{8}$/.test(phone)) return err.textContent = t("errPhone");
     if (!fac) return err.textContent = t("errFac");
     if (!year) return err.textContent = t("errYear");
-    if (!$("#f-consent").checked) return err.textContent = t("errConsent");
     S.player = { play_id: uuid(), name, phone, faculty: fac, year };
     sendSignup(); Sound.good(); startPlay();
   };
@@ -1007,7 +1008,12 @@ Screens.admin = function () {
 let toastId; function toast(m) { let el = $(".toast"); if (!el) { el = document.createElement("div"); el.className = "toast"; document.body.appendChild(el); } el.textContent = m; clearTimeout(toastId); toastId = setTimeout(() => el.remove(), 2200); }
 
 /* ---------- boot ---------- */
-if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+let pendingReload = false;
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!hadController) return; if (S.screen === "attract") location.reload(); else pendingReload = true; });
+}
 go("attract");
 window.App = { VERSION, S: () => S, go, cfg, DB, flush, startPlay, LOGOS, DEALS, NUMBERS };
 </script>
