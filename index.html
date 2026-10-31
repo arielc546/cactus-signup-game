@@ -288,7 +288,7 @@ html.docscroll .game{flex:none}
 <button class="adminHit" id="adminHit" aria-label="admin"></button>
 
 <script>
-const VERSION = "1.7";   // +0.1 per iteration
+const VERSION = "1.8";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -303,7 +303,7 @@ const CONFIG = {
   idleSeconds: 30,        // mid-game
   formIdleSeconds: 120,   // typing on the form
   nextIdleSeconds: 180,   // last page: someone may be waiting for help from the team
-  revealSeconds: 3, dealRevealSeconds: 5, scoreSeconds: 10, nextSeconds: 180,
+  revealSeconds: 3, dealRevealSeconds: 7, scoreSeconds: 10, nextSeconds: 180,
   logoSeconds: 8, numSeconds: 12, dealSeconds: 12, mazeSeconds: 15,
   mazeCols: 7, mazeRows: 9, mazeBills: 5,
   // "Beat the analysts": seeded onto the board. Replace with the real team.
@@ -404,7 +404,7 @@ const T = {
     introBtn: "יאללה", formTitle: "הרשמה", name: "שם מלא", phone: "טלפון", phonePh: "05X-XXXXXXX", study: "מה את/ה לומד/ת?", faculty: "פקולטה", year: "שנה",
     consent: "אפשר ליצור איתי קשר לגבי הקרן והאקדמיה", start: "מתחילים",
     errName: "צריך שם ללוח התוצאות", errPhone: "מספר ישראלי, 10 ספרות, מתחיל ב-05", errFac: "בחרו פקולטה", errYear: "באיזו שנה?", errConsent: "בלי אישור אי אפשר לשמור את הניקוד",
-    pts: "נק'", bn: "מיליארד $", g1: "מי החברה?", g2: "כמה זה נמכר?", g3: "משקיעים או עוברים?", g6: "הדרך שלכם לאקזיט", pitchLab: "הפיץ'", dealNo: "עסקה",
+    pts: "נק'", bn: "מיליארד $", g1: "הכר את ה-ecosystem", g2: "כמה זה נמכר?", g3: "משקיעים או עוברים?", g6: "הדרך שלכם לאקזיט", pitchLab: "הפיץ'", dealNo: "עסקה",
     lock: "נועלים", invest: "משקיעים", pass: "עוברים", swipeHint: "החליקו ימינה להשקיע, שמאלה לעבור", mazeHint: "גררו את הדמות עם האצבע עד האקזיט. אספו סבבי גיוס בדרך.",
     correct: "נכון", wrong: "לא בדיוק", timeout: "נגמר הזמן", spotOn: "בול", close: "קרוב", notFar: "לא רחוק", far: "רחוק",
     matched: "אותה החלטה כמו המציאות", missed: "המציאות החליטה אחרת", youSaid: "אמרתם", investedV: "להשקיע", passedV: "לעבור",
@@ -421,7 +421,7 @@ const T = {
     introBtn: "Let's go", formTitle: "Sign up", name: "Full name", phone: "Phone", phonePh: "05X-XXXXXXX", study: "What do you study?", faculty: "Faculty", year: "Year",
     consent: "Cactus may contact me about the fund and the Academy", start: "Start",
     errName: "Add a name for the board", errPhone: "Israeli number, 10 digits, starts with 05", errFac: "Pick a faculty", errYear: "Which year?", errConsent: "We can't save your score without consent",
-    pts: "pts", bn: "$B", g1: "Name the company", g2: "What did it sell for?", g3: "Invest or pass?", g6: "Your road to exit", pitchLab: "The pitch", dealNo: "Deal",
+    pts: "pts", bn: "$B", g1: "Know the ecosystem", g2: "What did it sell for?", g3: "Invest or pass?", g6: "Your road to exit", pitchLab: "The pitch", dealNo: "Deal",
     lock: "Lock it in", invest: "Invest", pass: "Pass", swipeHint: "Swipe right to invest, left to pass", mazeHint: "Drag your character with a finger to the exit. Pick up funding rounds on the way.",
     correct: "Correct", wrong: "Not quite", timeout: "Time's up", spotOn: "Spot on", close: "Close", notFar: "Not far", far: "Way off",
     matched: "Same call as reality", missed: "Reality went the other way", youSaid: "You said", investedV: "invest", passedV: "pass",
@@ -438,7 +438,7 @@ const T = {
 /* Cactus lines. {n} is filled in. */
 const LINES = {
   intro: { he: "60 שניות. שישה משחקים. תחשבו כמו משקיעים.", en: "60 seconds. Six games. Think like a VC." },
-  form: { he: "קודם נרשמים. אחר כך משחקים.", en: "Sign up first. Then we play." },
+  form: { he: "נרשמים, שנדע למי אנחנו מחלקים את הפרסים.", en: "Sign up, so we know who gets the prizes." },
   logo: { he: "מכירים את השוק לפני שקונים בו.", en: "Know the market before you buy into it." },
   num: { he: "אקזיטים ישראליים. כמה שילמו?", en: "Israeli exits. What did they pay?" },
   deal: [
