@@ -289,7 +289,7 @@ html.docscroll .game{flex:none}
 <button class="adminHit" id="adminHit" aria-label="admin"></button>
 
 <script>
-const VERSION = "1.9";   // +0.1 per iteration
+const VERSION = "2.0";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -996,7 +996,8 @@ Screens.admin = function () {
     <div id="an">${(cfg.analysts || []).map((a, i) => `<div class="kv"><span>${esc(a.name)}</span><span><b class="num">${a.score}</b> <button class="btn small" data-rm="${i}">✕</button></span></div>`).join("")}</div>
     <div class="row"><input id="an-name" placeholder="Name" style="flex:2"><input id="an-score" type="number" placeholder="Score" style="flex:1"><button class="btn small" id="an-add">Add</button></div>
     <h3 style="margin:6px 0 0">Export</h3>
-    <div class="row"><button class="btn small" id="csv-copy">Copy CSV</button>${navigator.share ? `<button class="btn small" id="csv-share">Share CSV</button>` : ""}<button class="btn small" id="csv-show">Show CSV</button></div>
+    <div class="row">${navigator.share ? `<button class="btn small primary" id="csv-share">Share CSV file</button>` : ""}<button class="btn small" id="csv-dl">Download CSV</button></div>
+    <div class="row"><button class="btn small" id="csv-copy">Copy for Excel / Sheets</button><button class="btn small" id="csv-show">Show as text</button></div>
     <textarea id="csv" hidden readonly></textarea>
     <div class="row"><button class="btn small" id="clear">Clear leaderboard + leads</button><button class="btn small" id="clear2" hidden style="background:#f3c4bd">Yes, clear everything</button></div>
     <div class="row"><button class="btn small" id="reload">Reload app</button><button class="btn primary small" id="close">Close</button></div>
@@ -1011,11 +1012,18 @@ Screens.admin = function () {
   $("#snd").onclick = () => { cfg.sound = !cfg.sound; saveCfg(); go("admin"); };
   app.querySelectorAll("[data-rm]").forEach(x => x.onclick = () => { cfg.analysts.splice(+x.dataset.rm, 1); saveCfg(); go("admin"); });
   $("#an-add").onclick = () => { const n = $("#an-name").value.trim(), s = parseInt($("#an-score").value, 10); if (!n || isNaN(s)) return; cfg.analysts = (cfg.analysts || []).concat([{ name: n, score: s }]); saveCfg(); go("admin"); };
-  const csv = () => { const cols = ["play_id", "full_name", "phone", "faculty", "year", "consent", "score", "best_score", "attempt", "rank_at_time", "deals_matched", "maze_exit", "interest_analyst", "interest_idea", "interest_updates", "no_contact", "played_at", "finished_at", "device", "event"];
-    const rows = [cols].concat(Object.values(leads).map(l => cols.map(c => l[c] ?? ""))); return rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n"); };
-  $("#csv-copy").onclick = () => { const s = csv(); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(s) : Promise.reject()).then(() => toast("Copied " + Object.keys(leads).length + " rows"), () => { $("#csv").hidden = false; $("#csv").value = s; $("#csv").select(); toast("Select and copy manually"); }); };
-  if ($("#csv-share")) $("#csv-share").onclick = () => { try { const f = new File([csv()], "cactus-leads.csv", { type: "text/csv" }); if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], title: "Cactus leads" }); else navigator.share({ text: csv(), title: "Cactus leads" }); } catch (e) { toast("Share failed"); } };
-  $("#csv-show").onclick = () => { $("#csv").hidden = !$("#csv").hidden; $("#csv").value = csv(); };
+  const COLS = ["play_id", "full_name", "phone", "faculty", "year", "consent", "score", "best_score", "attempt", "rank_at_time", "deals_matched", "maze_exit", "interest_analyst", "interest_idea", "interest_updates", "no_contact", "played_at", "finished_at", "device", "event"];
+  const rows = () => [COLS].concat(Object.values(leads).map(l => COLS.map(c => l[c] ?? "")));
+  const csv = () => "\ufeff" + rows().map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");   // BOM so Excel reads Hebrew
+  const tsv = () => rows().map(r => r.map(v => String(v).replace(/[\t\r\n]/g, " ")).join("\t")).join("\n");          // tabs paste into columns
+  const stamp = () => new Date().toISOString().slice(0, 16).replace(/[T:]/g, "-");
+  const fileName = () => `cactus-leads-${DEVICE}-${stamp()}.csv`;
+  $("#csv-copy").onclick = () => { const s = tsv(); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(s) : Promise.reject()).then(() => toast("Copied " + Object.keys(leads).length + " rows — paste into a sheet"), () => { $("#csv").hidden = false; $("#csv").value = s; $("#csv").select(); toast("Select and copy manually"); }); };
+  if ($("#csv-share")) $("#csv-share").onclick = async () => { try { const f = new File([csv()], fileName(), { type: "text/csv" });
+      if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: "Cactus leads" }); toast("Shared as a .csv file"); }
+      else { await navigator.share({ title: "Cactus leads", text: csv() }); toast("This device can't share files — sent as text. Use Download instead."); } } catch (e) { if (e && e.name !== "AbortError") toast("Share failed: " + e.message); } };
+  $("#csv-dl").onclick = () => { try { const blob = new Blob([csv()], { type: "text/csv;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = fileName(); document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 2000); toast("Saved to Files / Downloads"); } catch (e) { toast("Download failed"); } };
+  $("#csv-show").onclick = () => { $("#csv").hidden = !$("#csv").hidden; $("#csv").value = csv().slice(1); };
   $("#clear").onclick = () => { $("#clear2").hidden = false; };
   $("#clear2").onclick = () => { DB.set("board", []); DB.set("leads", {}); DB.set("stats", {}); toast("Cleared"); go("admin"); };
   $("#reload").onclick = () => location.reload();
