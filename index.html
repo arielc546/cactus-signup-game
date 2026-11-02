@@ -180,7 +180,7 @@ html.docscroll .game{flex:none}
 .contract ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .contract li{display:flex;gap:12px;align-items:flex-start;padding-bottom:8px;border-bottom:2px dashed var(--sand-3)}
 .contract li:last-child{border-bottom:0;padding-bottom:0}
-.contract li b{font-family:var(--display);font-weight:400;color:var(--cactus-2);font-size:20px;min-width:2em;padding-top:2px}
+.contract li b{font-family:var(--display);font-weight:400;flex:none;width:34px;height:34px;border-radius:50%;background:var(--cactus);color:#fff;border:2px solid var(--ink);display:grid;place-items:center;font-size:18px;line-height:1}
 .contract li strong{display:block;font-size:clamp(17px,2.2vh,21px)}
 .contract li span{display:block;color:var(--ink);opacity:.85;font-size:clamp(14px,1.85vh,17px);font-weight:500;line-height:1.4;margin-top:2px}
 .contract .foot2{font-size:14px;font-weight:600;color:var(--muted);padding-top:4px}
@@ -297,7 +297,7 @@ html.docscroll .game{flex:none}
 <canvas id="confetti" hidden></canvas>
 
 <script>
-const VERSION = "2.3";   // +0.1 per iteration
+const VERSION = "2.4";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -705,7 +705,7 @@ Screens.rules = function () {
   app.innerHTML = shell(null, "", ln("rules"), `
     <div class="title">${esc(t("rulesTitle"))} <span class="tsub">${esc(t("rulesSub"))}</span></div>
     <div class="card contract">
-      <ol>${t("rules").map((r, i) => `<li><b>§${i + 1}</b><div><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div></li>`).join("")}</ol>
+      <ol>${t("rules").map((r, i) => `<li><b>${i + 1}</b><div><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div></li>`).join("")}</ol>
       <div class="foot2">${esc(t("rulesFoot"))}</div>
     </div>
     <button class="btn primary" id="sign">${esc(t("sign"))}</button>`);
