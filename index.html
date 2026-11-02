@@ -41,7 +41,7 @@ h1,h2,h3{margin:0;line-height:1.05;text-wrap:balance;font-family:var(--display);
 
 /* header */
 .hdr{display:flex;align-items:center;gap:14px;height:56px;flex:none}
-.brand{font-family:var(--display);font-size:17px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;color:var(--ink)}
+.brand{cursor:pointer;-webkit-user-select:none;font-family:var(--display);font-size:17px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;color:var(--ink)}
 .brand i{width:14px;height:20px;border-radius:7px 7px 4px 4px;background:var(--cactus);border:2px solid var(--ink);display:inline-block}
 .brand img{height:40px;width:auto;display:block}
 .attract .logo{display:flex;justify-content:center;margin-bottom:6px}
@@ -96,7 +96,7 @@ h1,h2,h3{margin:0;line-height:1.05;text-wrap:balance;font-family:var(--display);
 .attract .stage{height:clamp(220px,30vh,330px);justify-content:center;gap:22px}
 .attract .stage .bubble{flex:0 1 auto;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.panels{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;min-height:0;flex:1}
+.panels{display:grid;grid-template-columns:1fr;gap:16px;min-height:0;flex:1;max-width:620px;width:100%;margin:0 auto}
 .panel{background:var(--cream);border:var(--bw) solid var(--ink);border-radius:20px;box-shadow:var(--sh);padding:14px 18px;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 .panel h3{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .lb{list-style:none;margin:0;padding:0;overflow:hidden}
@@ -174,6 +174,16 @@ html.docscroll .game{flex:none}
 [dir=rtl] .reveal .pts,[dir=rtl] .reveal .big{text-align:right}
 [dir=ltr] .reveal .pts,[dir=ltr] .reveal .big{text-align:left}
 .hint{color:var(--muted);font-size:15px;font-weight:600;text-align:center;flex:none}
+/* founders' contract */
+.title .tsub{font-size:.55em;color:var(--muted);margin-inline-start:8px;letter-spacing:.06em}
+.contract{padding:16px 20px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;overflow:auto}
+.contract ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.contract li{display:flex;gap:14px;align-items:flex-start;padding-bottom:10px;border-bottom:2px dashed var(--sand-3)}
+.contract li:last-child{border-bottom:0;padding-bottom:0}
+.contract li b{font-family:var(--display);font-weight:400;color:var(--cactus-2);font-size:20px;min-width:2em;padding-top:2px}
+.contract li strong{display:block;font-size:clamp(18px,2.4vh,22px)}
+.contract li span{display:block;color:var(--muted);font-size:clamp(15px,2vh,18px);font-weight:500;line-height:1.35}
+.contract .foot2{font-size:14px;font-weight:600;color:var(--muted);padding-top:4px}
 
 /* maze */
 .mazeWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;touch-action:none}
@@ -266,7 +276,6 @@ html.docscroll .game{flex:none}
   .field input{min-height:50px;font-size:18px} .consent{font-size:14px;padding:10px 12px}
   .attract .hero h1{font-size:clamp(34px,6vh,56px);text-shadow:3px 3px 0 var(--sun)} .attract .hero .eyebrow{font-size:12px}
   .attract .stage{height:clamp(140px,22vh,200px);gap:12px}
-  .panels{grid-template-columns:1fr} .panels .panel:nth-child(2){display:none}
   .panel{padding:10px 14px} .lb li{font-size:16px;padding:6px 0} .lb .s{font-size:18px}
   .deal .pitch{font-size:clamp(17px,2.5vh,22px);padding:14px 16px} .deal .head{padding:8px 14px;font-size:12px} .deal .stamp{font-size:24px;top:50px}
   .dealBtns .btn{font-size:22px}
@@ -286,10 +295,9 @@ html.docscroll .game{flex:none}
 <div class="deco"><div class="sun"></div><svg class="dune" viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 110 C180 40 320 150 520 90 C700 40 850 130 1000 70 L1000 160 L0 160 Z" fill="#ecd9b4"/><path d="M0 140 C220 90 380 160 600 120 C780 90 900 150 1000 120 L1000 160 L0 160 Z" fill="#e2cc9f"/></svg></div>
 <div id="app"></div>
 <canvas id="confetti" hidden></canvas>
-<button class="adminHit" id="adminHit" aria-label="admin"></button>
 
 <script>
-const VERSION = "2.0";   // +0.1 per iteration
+const VERSION = "2.1";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -402,7 +410,9 @@ const DEALS = [
 const T = {
   he: {
     title: "משחק המשקיעים הגדול", eyebrow: "קקטוס קפיטל · הקרן של הסטודנטים", tap: "לחצו כדי לשחק",
-    introBtn: "יאללה", formTitle: "הרשמה", name: "שם מלא", phone: "טלפון", phonePh: "05X-XXXXXXX", study: "מה את/ה לומד/ת?", faculty: "פקולטה", year: "שנה",
+    introBtn: "יאללה", formTitle: "הרשמה", name: "שם מלא", phone: "טלפון", phonePh: "05X-XXXXXXX", email: "מייל", emailPh: "name@post.bgu.ac.il", errEmail: "כתובת מייל לא תקינה",
+    rulesTitle: "חוזה היזמים", rulesSub: "Term Sheet", sign: "חותמים ומתחילים", rulesFoot: "100 נקודות לכל משחק, 600 בסך הכל. כדקה וחצי. הניקוד עולה ללוח, הפרסים למובילים.",
+    rules: [["הכר את ה-ecosystem", "לוגו מטושטש מתחדד. מזהים מהר, מרוויחים יותר."], ["כמה זה נמכר?", "אקזיט ישראלי, מספר אחד על סליידר. כמה שיותר קרוב."], ["משקיעים או עוברים?", "שלושה פיצ'ים אמיתיים בלי שם. ימינה להשקיע, שמאלה לעבור. ההיסטוריה שופטת."], ["הדרך שלכם לאקזיט", "מבוך, 15 שניות, סבבי גיוס בדרך. מגיעים ל-EXIT."]],
     consent: "אפשר ליצור איתי קשר לגבי הקרן והאקדמיה", start: "מתחילים",
     errName: "צריך שם ללוח התוצאות", errPhone: "מספר ישראלי, 10 ספרות, מתחיל ב-05", errFac: "בחרו פקולטה", errYear: "באיזו שנה?", errConsent: "בלי אישור אי אפשר לשמור את הניקוד",
     pts: "נק'", bn: "מיליארד $", g1: "הכר את ה-ecosystem", g2: "כמה זה נמכר?", g3: "משקיעים או עוברים?", g6: "הדרך שלכם לאקזיט", pitchLab: "הפיץ'", dealNo: "עסקה",
@@ -419,7 +429,9 @@ const T = {
   },
   en: {
     title: "Invest or Pass?", eyebrow: "Cactus Capital · the student VC", tap: "Tap to play",
-    introBtn: "Let's go", formTitle: "Sign up", name: "Full name", phone: "Phone", phonePh: "05X-XXXXXXX", study: "What do you study?", faculty: "Faculty", year: "Year",
+    introBtn: "Let's go", formTitle: "Sign up", name: "Full name", phone: "Phone", phonePh: "05X-XXXXXXX", email: "Email", emailPh: "name@post.bgu.ac.il", errEmail: "That email doesn't look right",
+    rulesTitle: "Founders' Contract", rulesSub: "Term Sheet", sign: "Sign and start", rulesFoot: "100 points per game, 600 total. About 90 seconds. Scores go on the board; prizes for the top.",
+    rules: [["Know the ecosystem", "A blurred logo sharpens. Name it fast, earn more."], ["What did it sell for?", "One Israeli exit, one number on a slider. Closer is better."], ["Invest or pass?", "Three real pitches, no names. Swipe right to invest, left to pass. History decides."], ["Your road to exit", "A maze, 15 seconds, funding rounds on the way. Reach the EXIT."]],
     consent: "Cactus may contact me about the fund and the Academy", start: "Start",
     errName: "Add a name for the board", errPhone: "Israeli number, 10 digits, starts with 05", errFac: "Pick a faculty", errYear: "Which year?", errConsent: "We can't save your score without consent",
     pts: "pts", bn: "$B", g1: "Know the ecosystem", g2: "What did it sell for?", g3: "Invest or pass?", g6: "Your road to exit", pitchLab: "The pitch", dealNo: "Deal",
@@ -440,6 +452,7 @@ const T = {
 const LINES = {
   intro: { he: "60 שניות. שישה משחקים. תחשבו כמו משקיעים.", en: "60 seconds. Six games. Think like a VC." },
   form: { he: "נרשמים, שנדע למי אנחנו מחלקים את הפרסים.", en: "Sign up, so we know who gets the prizes." },
+  rules: { he: "קוראים, חותמים, יאללה.", en: "Read, sign, go." },
   logo: { he: "מכירים את השוק לפני שקונים בו.", en: "Know the market before you buy into it." },
   num: { he: "אקזיטים ישראליים. כמה שילמו?", en: "Israeli exits. What did they pay?" },
   deal: [
@@ -494,7 +507,7 @@ let idleId = null;
 function resetIdle() {
   clearTimeout(idleId);
   if (S.screen === "attract" || S.screen === "admin" || S.screen === "pin") return;
-  const secs = S.screen === "form" ? cfg.formIdleSeconds : S.screen === "next" ? cfg.nextIdleSeconds : cfg.idleSeconds;
+  const secs = (S.screen === "form" || S.screen === "rules") ? cfg.formIdleSeconds : S.screen === "next" ? cfg.nextIdleSeconds : cfg.idleSeconds;
   idleId = setTimeout(() => abandon(), secs * 1000);
 }
 document.addEventListener("pointerdown", () => { resetIdle(); Sound.unlock(); }, { capture: true });
@@ -542,7 +555,7 @@ function updatePending() { const n = DB.get("queue", []).length; const el = $("#
 
 function sendSignup() {
   const p = S.player;
-  const payload = { event: "signup", play_id: p.play_id, full_name: p.name, phone: p.phone, faculty: p.faculty, year: p.year, device: DEVICE, lang: L, played_at: new Date().toISOString() };
+  const payload = { event: "signup", play_id: p.play_id, full_name: p.name, phone: p.phone, email: p.email, device: DEVICE, lang: L, played_at: new Date().toISOString() };
   upsertLead(payload); enqueue(payload);
 }
 function sendResult(abandoned) {
@@ -594,7 +607,7 @@ function setPose(pose) { const c = $("#cactus"); if (c) { c.setAttribute("class"
 /* ---------- screens ---------- */
 function go(screen, arg) {
   clearTimers(); S.screen = screen;
-  document.documentElement.classList.toggle("docscroll", screen === "form"); window.scrollTo(0, 0);
+  document.documentElement.classList.toggle("docscroll", screen === "form" || screen === "rules"); window.scrollTo(0, 0);
   const fn = Screens[screen]; app.innerHTML = ""; fn(arg);
   if (screen === "attract" && pendingReload) location.reload();
   document.documentElement.dir = L === "he" ? "rtl" : "ltr"; document.documentElement.lang = L;
@@ -617,23 +630,19 @@ function wireBack() { const b = $("#back"); if (b) b.onclick = () => { Sound.tap
 Screens.attract = function () {
   freshState(); S.screen = "attract";
   const fb = fullBoard(); const top = fb.slice(0, 6); const plays = board().length;
-  const facs = facultyAverages();
   app.innerHTML = `<div class="screen attract" id="attract">
     <div class="hero">${cfg.logo ? `<div class="logo"><img src="${esc(cfg.logo)}" alt="${esc(cfg.fundName)}"></div>` : `<div class="eyebrow">${esc(t("eyebrow"))}</div>`}<h1>${esc(t("title"))}</h1></div>
     <div class="stage">${cactusSVG("wave")}<div class="bubble big" id="bubble">${esc(t("tap"))}</div></div>
     <div class="panels">
       <div class="panel"><h3><span>${esc(t("board"))}</span><span class="num">${fmt(t("played"), { n: plays })}</span></h3>
-        ${top.length ? `<ol class="lb">${top.map((e, i) => `<li><span class="r num">${i + 1}</span><span class="n">${esc(e.name)}${e.analyst ? `<small>${esc(t("analystTag"))}</small>` : e.faculty ? `<small>${esc(e.faculty)}</small>` : ""}</span><span class="s num">${e.score}</span></li>`).join("")}</ol>` : `<div class="empty">${esc(t("noScores"))}</div>`}
-      </div>
-      <div class="panel"><h3><span>${esc(t("faculties"))}</span></h3>
-        ${facs.length ? `<div class="fac">${facs.map(f => `<div><span>${esc(f.name)}</span><span class="num">${f.avg}</span><b><i style="width:${(f.avg / MAX) * 100}%"></i></b></div>`).join("")}</div>` : `<div class="empty">${esc(t("noFac"))}</div>`}
+        ${top.length ? `<ol class="lb">${top.map((e, i) => `<li><span class="r num">${i + 1}</span><span class="n">${esc(e.name)}${e.analyst ? `<small>${esc(t("analystTag"))}</small>` : ""}</span><span class="s num">${e.score}</span></li>`).join("")}</ol>` : `<div class="empty">${esc(t("noScores"))}</div>`}
       </div>
     </div>
     <div class="foot"><button class="langpill" id="lang">${esc(t("lang"))}</button><span id="pending"></span><span>v${VERSION}</span></div>
   </div>`;
   $("#lang").addEventListener("pointerdown", e => e.stopPropagation());
   $("#lang").onclick = () => { L = cfg.lang = (L === "he" ? "en" : "he"); saveCfg(); go("attract"); };
-  $("#attract").addEventListener("pointerdown", e => { if (e.target.closest("#lang")) return; Sound.tap(); go("intro"); });
+  $("#attract").addEventListener("pointerdown", e => { if (e.target.closest("#lang, .brand, .logo")) return; Sound.tap(); go("intro"); });
 };
 function facultyAverages() {
   const m = {}; board().forEach(e => { if (!e.faculty) return; m[e.faculty] = m[e.faculty] || { s: 0, n: 0 }; m[e.faculty].s += e.score; m[e.faculty].n++; });
@@ -650,33 +659,41 @@ Screens.intro = function () {
 
 /* --- form --- */
 Screens.form = function () {
-  const facs = cfg.faculties[L], yrs = cfg.years[L];
   app.innerHTML = shell(null, "", ln("form"), `
     <div class="title">${esc(t("formTitle"))}</div>
     <div class="form" id="form">
       <div class="field"><label for="f-name">${esc(t("name"))}</label><input id="f-name" type="text" autocomplete="off" autocapitalize="words" enterkeyhint="next"></div>
-      <div class="field"><label for="f-phone">${esc(t("phone"))}</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="off" placeholder="${esc(t("phonePh"))}" maxlength="12" enterkeyhint="done"></div>
-      <div class="field"><label>${esc(t("study"))}</label><div class="chips" id="f-fac">${facs.map(f => `<button class="chip" type="button" data-v="${esc(f)}">${esc(f)}</button>`).join("")}</div></div>
-      <div class="field"><label>${esc(t("year"))}</label><div class="chips" id="f-year">${yrs.map(y => `<button class="chip" type="button" data-v="${esc(y)}">${esc(y)}</button>`).join("")}</div></div>
+      <div class="field"><label for="f-phone">${esc(t("phone"))}</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="off" placeholder="${esc(t("phonePh"))}" maxlength="12" enterkeyhint="next"></div>
+      <div class="field"><label for="f-email">${esc(t("email"))}</label><input id="f-email" type="email" inputmode="email" autocomplete="off" autocapitalize="off" autocorrect="off" placeholder="${esc(t("emailPh"))}" enterkeyhint="done" dir="ltr" style="text-align:start"></div>
       <div class="err" id="err"></div>
       <button class="btn primary" id="start">${esc(t("start"))}</button>
     </div>`, false, "intro");
   wireBack();
-  let fac = null, year = null;
-  const chips = (id, set) => $(id).querySelectorAll(".chip").forEach(c => c.onclick = () => { $(id).querySelectorAll(".chip").forEach(x => x.classList.remove("on")); c.classList.add("on"); set(c.dataset.v); Sound.tap(); });
-  chips("#f-fac", v => fac = v); chips("#f-year", v => year = v);
   $("#f-name").onkeydown = e => { if (e.key === "Enter") $("#f-phone").focus(); };
-  $("#f-phone").onkeydown = e => { if (e.key === "Enter") e.target.blur(); };
+  $("#f-phone").onkeydown = e => { if (e.key === "Enter") $("#f-email").focus(); };
+  $("#f-email").onkeydown = e => { if (e.key === "Enter") e.target.blur(); };
   $("#start").onclick = () => {
-    const name = $("#f-name").value.trim(), phone = $("#f-phone").value.replace(/\D/g, ""), err = $("#err");
-    $("#f-name").classList.toggle("bad", name.length < 2); $("#f-phone").classList.toggle("bad", !/^05\d{8}$/.test(phone));
+    const name = $("#f-name").value.trim(), phone = $("#f-phone").value.replace(/\D/g, ""), email = $("#f-email").value.trim(), err = $("#err");
+    const okEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    $("#f-name").classList.toggle("bad", name.length < 2); $("#f-phone").classList.toggle("bad", !/^05\d{8}$/.test(phone)); $("#f-email").classList.toggle("bad", !okEmail);
     if (name.length < 2) return err.textContent = t("errName");
     if (!/^05\d{8}$/.test(phone)) return err.textContent = t("errPhone");
-    if (!fac) return err.textContent = t("errFac");
-    if (!year) return err.textContent = t("errYear");
-    S.player = { play_id: uuid(), name, phone, faculty: fac, year };
-    sendSignup(); Sound.good(); startPlay();
+    if (!okEmail) return err.textContent = t("errEmail");
+    S.player = { play_id: uuid(), name, phone, email };
+    sendSignup(); Sound.good(); go("rules");
   };
+};
+
+/* --- rules: the founders' contract --- */
+Screens.rules = function () {
+  app.innerHTML = shell(null, "", ln("rules"), `
+    <div class="title">${esc(t("rulesTitle"))} <span class="tsub">${esc(t("rulesSub"))}</span></div>
+    <div class="card contract">
+      <ol>${t("rules").map((r, i) => `<li><b>§${i + 1}</b><div><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div></li>`).join("")}</ol>
+      <div class="foot2">${esc(t("rulesFoot"))}</div>
+    </div>
+    <button class="btn primary" id="sign">${esc(t("sign"))}</button>`);
+  $("#sign").onclick = () => { Sound.good(); startPlay(); };
 };
 
 function startPlay() {
@@ -914,7 +931,7 @@ Screens.reveal = function (r) {
 
 /* --- score --- */
 Screens.score = function () {
-  const me = { play_id: S.player.play_id, name: S.player.name, faculty: S.player.faculty, year: S.player.year, score: S.score, ts: new Date().toISOString() };
+  const me = { play_id: S.player.play_id, name: S.player.name, score: S.score, ts: new Date().toISOString() };
   const first = !S.scored; S.scored = true;
   if (first) { upsertBoard(me); S.best = Math.max(S.best, S.score); }
   const fb = fullBoard(), rank = rankOf(S.score), n = fb.length;
@@ -971,7 +988,12 @@ function confetti() {
 
 /* --- admin --- */
 let adminTaps = [];
-$("#adminHit").addEventListener("pointerdown", e => { e.stopPropagation(); const now = Date.now(); adminTaps = adminTaps.filter(x => now - x < 3000); adminTaps.push(now); if (adminTaps.length >= 5) { adminTaps = []; go("pin"); } });
+/* admin: tap the Cactus logo 5 times within 3 seconds, on any screen */
+document.addEventListener("pointerdown", e => {
+  if (!e.target.closest(".brand, .attract .logo") || S.screen === "admin" || S.screen === "pin") return;
+  const now = Date.now(); adminTaps = adminTaps.filter(x => now - x < 3000); adminTaps.push(now);
+  if (adminTaps.length >= 5) { adminTaps = []; go("pin"); }
+}, { capture: true });
 Screens.pin = function () {
   let v = "";
   app.innerHTML = `<div class="screen pin"><h2>PIN</h2><div class="dotsrow">${[0, 1, 2, 3].map(() => "<i></i>").join("")}</div>
@@ -1006,13 +1028,13 @@ Screens.admin = function () {
   const save = () => { cfg.webhook = $("#wh").value.trim(); saveCfg(); };
   $("#wh").onchange = save;
   $("#sync").onclick = async () => { save(); await flush(); $("#pq").textContent = DB.get("queue", []).length; toast("Synced; " + DB.get("queue", []).length + " left"); };
-  $("#test").onclick = () => { save(); enqueue({ event: "test", play_id: "test-" + Date.now(), full_name: "Test Row", phone: "0500000000", faculty: "Test", year: "1", score: 123, device: DEVICE, played_at: new Date().toISOString() }); toast("Test row queued"); setTimeout(() => $("#pq").textContent = DB.get("queue", []).length, 1500); };
+  $("#test").onclick = () => { save(); enqueue({ event: "test", play_id: "test-" + Date.now(), full_name: "Test Row", phone: "0500000000", email: "test@example.com", score: 123, device: DEVICE, played_at: new Date().toISOString() }); toast("Test row queued"); setTimeout(() => $("#pq").textContent = DB.get("queue", []).length, 1500); };
   $("#pm-json").onclick = () => { cfg.postMode = "json"; saveCfg(); go("admin"); }; $("#pm-form").onclick = () => { cfg.postMode = "form"; saveCfg(); go("admin"); };
   $("#lang-he").onclick = () => { cfg.lang = L = "he"; saveCfg(); go("admin"); }; $("#lang-en").onclick = () => { cfg.lang = L = "en"; saveCfg(); go("admin"); };
   $("#snd").onclick = () => { cfg.sound = !cfg.sound; saveCfg(); go("admin"); };
   app.querySelectorAll("[data-rm]").forEach(x => x.onclick = () => { cfg.analysts.splice(+x.dataset.rm, 1); saveCfg(); go("admin"); });
   $("#an-add").onclick = () => { const n = $("#an-name").value.trim(), s = parseInt($("#an-score").value, 10); if (!n || isNaN(s)) return; cfg.analysts = (cfg.analysts || []).concat([{ name: n, score: s }]); saveCfg(); go("admin"); };
-  const COLS = ["play_id", "full_name", "phone", "faculty", "year", "consent", "score", "best_score", "attempt", "rank_at_time", "deals_matched", "maze_exit", "interest_analyst", "interest_idea", "interest_updates", "no_contact", "played_at", "finished_at", "device", "event"];
+  const COLS = ["play_id", "full_name", "phone", "email", "consent", "score", "best_score", "attempt", "rank_at_time", "deals_matched", "maze_exit", "interest_analyst", "interest_idea", "interest_updates", "no_contact", "played_at", "finished_at", "device", "event"];
   const rows = () => [COLS].concat(Object.values(leads).map(l => COLS.map(c => l[c] ?? "")));
   const csv = () => "\ufeff" + rows().map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");   // BOM so Excel reads Hebrew
   const tsv = () => rows().map(r => r.map(v => String(v).replace(/[\t\r\n]/g, " ")).join("\t")).join("\n");          // tabs paste into columns
