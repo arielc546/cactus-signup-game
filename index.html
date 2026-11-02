@@ -76,7 +76,7 @@ h1,h2,h3{margin:0;line-height:1.05;text-wrap:balance;font-family:var(--display);
 .btn.ghost{background:var(--sand-2)}
 .btn.small{min-height:46px;font-size:17px;width:auto;padding:8px 16px;border-radius:12px;box-shadow:var(--sh-s)}
 .btn[disabled]{opacity:.5;transform:none}
-.btn.ok{background:var(--cactus-3)} .btn.no{background:#f3c4bd;opacity:.8}
+.btn.ok{background:var(--cactus-3)} .btn.no{background:#ec9a88;opacity:.85}
 .btn.on{background:var(--cactus);color:#fff}
 .row{display:flex;gap:12px}
 .row .btn{flex:1;min-width:0}
@@ -157,7 +157,7 @@ html.docscroll .game{flex:none}
 .dealBtns{display:flex;gap:12px;flex:none;direction:ltr}
 .dealBtns .btn{flex:1;font-family:var(--display);font-weight:400;font-size:28px}
 .btn.invest{background:var(--cactus);color:#fff}
-.btn.pass{background:#f6d9d2}
+.btn.pass{background:#ec9a88}
 
 /* reveal */
 .reveal{flex:1;display:flex;flex-direction:column;gap:10px;padding:20px 24px;min-height:0;overflow:auto}
@@ -297,7 +297,7 @@ html.docscroll .game{flex:none}
 <canvas id="confetti" hidden></canvas>
 
 <script>
-const VERSION = "2.2";   // +0.1 per iteration
+const VERSION = "2.3";   // +0.1 per iteration
 /* =====================================================================
    CONFIG — the only block the team needs to edit.
    ===================================================================== */
@@ -411,20 +411,20 @@ const T = {
   he: {
     title: "משחק המשקיעים הגדול", eyebrow: "קקטוס קפיטל · הקרן של הסטודנטים", tap: "לחצו כדי לשחק",
     introBtn: "יאללה", formTitle: "הרשמה", name: "שם מלא", phone: "טלפון", phonePh: "05X-XXXXXXX", email: "מייל", emailPh: "name@post.bgu.ac.il", errEmail: "כתובת מייל לא תקינה",
-    rulesTitle: "חוזה היזמים", rulesSub: "Term Sheet", sign: "חותמים ומתחילים", rulesFoot: "כל המשחק כדקה וחצי. הקקטוס מלווה אתכם לאורך הדרך.", year: "באיזו שנה את/ה?", errYear: "באיזו שנה?",
+    rulesTitle: "הסבר קצר", rulesSub: "Term Sheet", sign: "חותמים ומתחילים", rulesFoot: "כל המשחק כדקה וחצי. הקקטוס מלווה אתכם לאורך הדרך.", year: "באיזו שנה את/ה?", errYear: "באיזו שנה?",
     rules: [
       ["הכר את ה-ecosystem", "על המסך מופיע לוגו של חברה מוכרת, מפוקסל, ומתחדד במשך 8 שניות. מתחתיו ארבעה שמות. לוחצים על הנכון. ככל שמוקדם יותר, יותר נקודות, עד 100."],
       ["כמה זה נמכר?", "שאלה אחת על אקזיט ישראלי, למשל כמה גוגל שילמה על Wiz. גוררים סליידר למספר במיליארדי דולר ונועלים. 12 שניות. נקודות לפי הקרבה לתשובה."],
-      ["משקיעים או עוברים?", "שלושה קלפים, אחד אחרי השני. בכל קלף פיץ' של חברה אמיתית, בלי השם. מחליקים ימינה להשקיע, שמאלה לעבור. 12 שניות לקלף. אחר כך מגלים מי זו הייתה ומה קרה לה. 100 נקודות אם צדקתם."],
+      ["משקיע או לא משקיע?", "שלושה קלפים, אחד אחרי השני. בכל קלף פיץ' של חברה אמיתית, בלי השם. מחליקים ימינה = משקיע, שמאלה = לא משקיע. 12 שניות לקלף. אחר כך מגלים מי זו הייתה ומה קרה לה. 100 נקודות אם צדקתם."],
       ["הדרך שלכם לאקזיט", "מבוך. הדמות שלכם, עם השם שלכם, מתחילה בפינה. גוררים אותה עם האצבע עד ה-EXIT תוך 15 שניות ואוספים סבבי גיוס בדרך. עד 100 נקודות."],
       ["לוח התוצאות", "בסוף רואים ניקוד מתוך 600 ומיקום בלוח של היום. המובילים בסוף היום מקבלים פרס."]
     ],
     consent: "אפשר ליצור איתי קשר לגבי הקרן והאקדמיה", start: "מתחילים",
     errName: "צריך שם ללוח התוצאות", errPhone: "מספר ישראלי, 10 ספרות, מתחיל ב-05", errFac: "בחרו פקולטה", errYear: "באיזו שנה?", errConsent: "בלי אישור אי אפשר לשמור את הניקוד",
-    pts: "נק'", bn: "מיליארד $", g1: "הכר את ה-ecosystem", g2: "כמה זה נמכר?", g3: "משקיעים או עוברים?", g6: "הדרך שלכם לאקזיט", pitchLab: "הפיץ'", dealNo: "עסקה",
-    lock: "נועלים", invest: "משקיעים", pass: "עוברים", swipeHint: "החליקו ימינה להשקיע, שמאלה לעבור", mazeHint: "גררו את הדמות עם האצבע עד האקזיט. אספו סבבי גיוס בדרך.",
+    pts: "נק'", bn: "מיליארד $", g1: "הכר את ה-ecosystem", g2: "כמה זה נמכר?", g3: "משקיע או לא משקיע?", g6: "הדרך שלכם לאקזיט", pitchLab: "הפיץ'", dealNo: "עסקה",
+    lock: "נועלים", invest: "משקיע", pass: "לא משקיע", swipeHint: "ימינה = משקיע, שמאלה = לא משקיע", mazeHint: "גררו את הדמות עם האצבע עד האקזיט. אספו סבבי גיוס בדרך.",
     correct: "נכון", wrong: "לא בדיוק", timeout: "נגמר הזמן", spotOn: "בול", close: "קרוב", notFar: "לא רחוק", far: "רחוק",
-    matched: "אותה החלטה כמו המציאות", missed: "המציאות החליטה אחרת", youSaid: "אמרתם", investedV: "להשקיע", passedV: "לעבור",
+    matched: "אותה החלטה כמו המציאות", missed: "המציאות החליטה אחרת", youSaid: "אמרתם", investedV: "משקיע", passedV: "לא משקיע",
     what: "מה קרה", signal: "הסימן", crowd: "{p}% מהשחקנים השקיעו",
     mazeExit: "אקזיט!", mazeNoExit: "לא הגעתם לאקזיט בזמן", billsGot: "{n} סבבי גיוס", rounds: "סבבים", secLeft: "{s} שניות נשארו",
     yourScore: "הניקוד שלך", rank: "מקום {r} מתוך {n}", beat: "ניצחת {n} אנליסטים", beatOne: "ניצחת אנליסט אחד", beatNone: "האנליסטים עדיין מובילים",
@@ -436,7 +436,7 @@ const T = {
   en: {
     title: "Invest or Pass?", eyebrow: "Cactus Capital · the student VC", tap: "Tap to play",
     introBtn: "Let's go", formTitle: "Sign up", name: "Full name", phone: "Phone", phonePh: "05X-XXXXXXX", email: "Email", emailPh: "name@post.bgu.ac.il", errEmail: "That email doesn't look right",
-    rulesTitle: "Founders' Contract", rulesSub: "Term Sheet", sign: "Sign and start", rulesFoot: "The whole game takes about 90 seconds. The cactus walks you through it.", year: "Which year are you in?", errYear: "Which year?",
+    rulesTitle: "Quick guide", rulesSub: "Term Sheet", sign: "Sign and start", rulesFoot: "The whole game takes about 90 seconds. The cactus walks you through it.", year: "Which year are you in?", errYear: "Which year?",
     rules: [
       ["Know the ecosystem", "A familiar company's logo appears pixelated and sharpens over 8 seconds, with four names below. Tap the right one. The earlier, the more points, up to 100."],
       ["What did it sell for?", "One question on an Israeli exit, e.g. how much Google paid for Wiz. Drag a slider to a number in billions of dollars and lock it. 12 seconds. Points by how close you are."],
